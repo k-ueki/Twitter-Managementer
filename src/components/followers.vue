@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>Followers</h1>
-		<button @click="getTweets">getTweets</button>
+		<button @click="getFollowers">getFollowers</button>
 	</div>
 </template>
 <script>
@@ -17,7 +17,7 @@ export default{
 		}
 	},
 	methods:{
-		getTweets(){
+		getFollowers(){
 			axios.get(base)
 				.then(response => {
 					this.tweets = response.data
