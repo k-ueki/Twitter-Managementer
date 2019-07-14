@@ -6,8 +6,8 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import Index from './index.vue'
-import Followers from './followers.vue'
+import Index from './components/index.vue'
+import Followers from './components/followers.vue'
 
 import axios from 'axios'
 import Router from 'vue-router'
