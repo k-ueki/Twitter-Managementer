@@ -6,10 +6,11 @@ import (
 )
 
 //to Front
+// test to get timeline
 func APISet(w http.ResponseWriter, r *http.Request) {
 	var tcl = NewClient()
 
-	path := "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	path := baseURL + "/statuses/home_timeline.json"
 	body := tcl.GetTimeline(path)
 	fmt.Println("HELLO")
 	w.Write(body)

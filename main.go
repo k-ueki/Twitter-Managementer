@@ -8,10 +8,11 @@ import (
 	"github.com/k-ueki/TwitterManager/config"
 	"github.com/k-ueki/TwitterManager/router"
 	"github.com/k-ueki/TwitterManager/tweets"
+	"github.com/k-ueki/TwitterManager/users"
 )
 
 const (
-	baseURL    = "https://"
+	baseURL    = "https://api.twitter/1.1"
 	clientport = ":6060"
 	port       = ":7777"
 )
@@ -34,6 +35,8 @@ func main() {
 	r, cors := con.NewRouter()
 
 	r.HandleFunc("/", APISet)
+	r.HandleFunc("/followers/", users.Followers)
+	//r.HandleFunc("/get/followers", getFollowers)
 
 	err := RunServe(port, r, cors)
 	if err != nil {
