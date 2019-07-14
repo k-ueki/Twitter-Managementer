@@ -3,7 +3,7 @@ package tweets
 import (
 	"io/ioutil"
 
-	"github.com/k-ueki/TwitterManagementer/config"
+	"github.com/k-ueki/TwitterManager/config"
 )
 
 type Client config.Client
