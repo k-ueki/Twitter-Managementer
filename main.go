@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/k-ueki/TwitterManagementer/config"
-	"github.com/k-ueki/TwitterManagementer/router"
-	"github.com/k-ueki/TwitterManagementer/tweets"
+	"github.com/k-ueki/TwitterManager/config"
+	"github.com/k-ueki/TwitterManager/router"
+	"github.com/k-ueki/TwitterManager/tweets"
 )
 
 const (

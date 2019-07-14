@@ -1,16 +1,26 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+	<router-view></router-view>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import Main from './main.vue'
+
+import axios from 'axios'
+import Router from 'vue-router'
 
 export default {
   name: 'app',
-  components: {
-  }
+	data(){
+		return{
+		}
+	},
+	methods:{
+	},components:{
+		Main
+	}
 }
 </script>
 
