@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Index from '@/index.vue'
-import Followers from '@/followers.vue'
+import Index from '@/components/index.vue'
+import Followers from '@/components/followers.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
 
 Vue.use(VueRouter)
