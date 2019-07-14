@@ -1,42 +1,32 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/k-ueki/TwitterManager/config"
 	"github.com/k-ueki/TwitterManager/router"
-	"github.com/k-ueki/TwitterManager/tweets"
-	"github.com/k-ueki/TwitterManager/users"
 )
 
 const (
-	baseURL    = "https://api.twitter/1.1"
+	baseURL    = "https://api.twitter.com/1.1/"
 	clientport = ":6060"
 	port       = ":7777"
 )
 
-//func NewClient() (*config.Client, *tweets.Client) {
-func NewClient() *tweets.Client {
-	conf, token, client := config.Set()
-
-	return &tweets.Client{
-		Config:     conf,
-		Token:      token,
-		HttpClient: client,
-	}
-}
-
 func main() {
+	api := config.GetTwitterApi()
+	fmt.Println(api)
+
 	var con = router.Config{
 		Port: clientport,
 	}
 	r, cors := con.NewRouter()
 
 	r.HandleFunc("/", APISet)
-	r.HandleFunc("/followers/", users.Followers)
-	//r.HandleFunc("/get/followers", getFollowers)
+	r.HandleFunc("/followers/", Followers)
 
 	err := RunServe(port, r, cors)
 	if err != nil {
