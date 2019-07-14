@@ -1,11 +1,10 @@
 <template>
 	<div>
-		<!--
+		<h1>Main</h1>
 		<button @click="getTweets">getTweets</button>
 		<div v-for="tweet in tweets">
 			{{tweet.text}}	
 		</div>
-		-->
 	</div>
 </template>
 <script>

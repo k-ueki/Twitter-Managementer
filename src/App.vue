@@ -6,7 +6,8 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import Main from './main.vue'
+import Index from './index.vue'
+import Followers from './followers.vue'
 
 import axios from 'axios'
 import Router from 'vue-router'
@@ -19,7 +20,9 @@ export default {
 	},
 	methods:{
 	},components:{
-		Main
+		Index,
+		Followers,
+		HelloWorld
 	}
 }
 </script>
