@@ -1,11 +1,8 @@
 package users
 
 import (
-	"fmt"
 	"io/ioutil"
-	"net/url"
 
-	"github.com/ChimeraCoder/anaconda"
 	"github.com/k-ueki/TwitterManager/config"
 )
 
@@ -17,10 +14,6 @@ import (
 type Client config.Client
 
 func (u *Client) GetFollowersList(path string) []byte {
-	var twitter anaconda.TwitterApi
-	v := url.Values{}
-	res := twitter.GetFollowersListAll(v)
-	fmt.Println(res)
 
 	resp, _ := u.HttpClient.Get(path)
 	if resp.StatusCode != 200 {

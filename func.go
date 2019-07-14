@@ -3,23 +3,24 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
-	"github.com/k-ueki/TwitterManager/tweets"
+	"github.com/k-ueki/TwitterManager/timeline"
 	"github.com/k-ueki/TwitterManager/users"
 )
 
 //to Front
 // test to get timeline
-func APISet(w http.ResponseWriter, r *http.Request) {
-	var tcl = NewClient()
-
-	path := baseURL + "/statuses/home_timeline.json"
-	body := tcl.GetTimeline(path)
-	fmt.Println("HELLO")
-	w.Write(body)
-}
+//func APISet(w http.ResponseWriter, r *http.Request) {
+//	var tcl = NewClient()
+//
+//	path := baseURL + "/statuses/home_timeline.json"
+//	body := tcl.GetTimeline(path)
+//	fmt.Println("HELLO")
+//	w.Write(body)
+//}
 
 // -------Followers----------
 func NewUsersClient() *users.Client {
@@ -61,10 +62,10 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 // ----------Tweets-----------
 
 //func NewClient() (*config.Client, *tweets.Client) {
-func NewClient() *tweets.Client {
+func NewClient() *timeline.Client {
 	conf, token, client := config.Set()
 
-	return &tweets.Client{
+	return &timeline.Client{
 		Config:     conf,
 		Token:      token,
 		HttpClient: client,
@@ -73,6 +74,9 @@ func NewClient() *tweets.Client {
 
 // ---------------------------
 
+// ---------timeline----------
+
+// --------------------------
 // ---------others----------
 func Sep(str, separator string) {
 	tmp := strings.Split(str, separator)

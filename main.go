@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/k-ueki/TwitterManager/config"
 	"github.com/k-ueki/TwitterManager/router"
 )
 
@@ -17,16 +15,15 @@ const (
 )
 
 func main() {
-	api := config.GetTwitterApi()
-	fmt.Println(api)
 
 	var con = router.Config{
 		Port: clientport,
 	}
 	r, cors := con.NewRouter()
 
-	r.HandleFunc("/", APISet)
+	//r.HandleFunc("/", APISet)
 	r.HandleFunc("/followers/", Followers)
+	///r.HandleFunc("/timeline/", tl.Timeline)
 
 	err := RunServe(port, r, cors)
 	if err != nil {

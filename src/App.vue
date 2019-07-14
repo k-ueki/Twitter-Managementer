@@ -8,6 +8,7 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Index from './components/index.vue'
 import Followers from './components/followers.vue'
+import Timeline from './components/timeline.vue'
 
 import axios from 'axios'
 import Router from 'vue-router'
@@ -22,7 +23,8 @@ export default {
 	},components:{
 		Index,
 		Followers,
-		HelloWorld
+		HelloWorld,
+		Timeline
 	}
 }
 </script>
