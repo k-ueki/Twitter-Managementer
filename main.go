@@ -28,14 +28,7 @@ func NewClient() *tweets.Client {
 }
 
 func main() {
-	var tcl = NewClient()
-
-	path := "https://api.twitter.com/1.1/statuses/home_timeline.json"
-	//body := tcl.GetTimeline(path)
-	_ = tcl.GetTimeline(path)
-
 	var con = router.Config{
-
 		Port: clientport,
 	}
 	r, cors := con.NewRouter()
