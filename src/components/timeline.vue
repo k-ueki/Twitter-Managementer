@@ -17,6 +17,15 @@ export default{
 			timeline:[],
 		}
 	},
+	created(){
+		axios.get(base)
+		.then(res => {
+			this.timeline = res.data
+			console.log(res.data)
+		}).catch(err => {
+			console.log(err)
+		})
+	},
 	methods:{
 		getTimeline(){
 			axios.get(base)

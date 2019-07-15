@@ -45,3 +45,11 @@ type User struct {
 	Notifications                  bool              `json:notifications`
 	TranslatorType                 string            `json:translator_typa`
 }
+
+type Followers struct {
+	Users             []User `json:users`
+	NextCursor        int64  `json:next_cursor`
+	NextCursorStr     string `json:next_cursor_str`
+	PreviousCursor    int64  `json:previous_cursor`
+	PreviousCursorStr string `json:previous_cursor_str`
+}

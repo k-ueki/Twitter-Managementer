@@ -1,6 +1,8 @@
 package users
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
 	"github.com/k-ueki/TwitterManager/config"
@@ -14,16 +16,14 @@ import (
 type Client config.Client
 
 func (u *Client) GetFollowersList(path string) []byte {
+	var followers []Followers
 
 	resp, _ := u.HttpClient.Get(path)
-	if resp.StatusCode != 200 {
-		return nil
-	}
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	//err := json.Unmarshal(body)
-	//fmt.Println(err, "ERR")
+	_ = json.Unmarshal(body, &followers)
+	fmt.Println("Followers", followers, "\n")
 
 	return body
 }
