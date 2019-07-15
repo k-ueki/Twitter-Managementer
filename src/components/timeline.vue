@@ -2,7 +2,7 @@
 	<div>
 		<h1>Timeline</h1>
 		<button @click="getTimeline">getTimeline</button>
-		<div v-for="tl in timeline">{{tl}}</div>
+		<div v-for="tl in timeline">{{tl}}<br/><br/></div>
 	</div>
 </template>
 <script>

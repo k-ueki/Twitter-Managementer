@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
@@ -75,6 +74,14 @@ func NewClient() *timeline.Client {
 // ---------------------------
 
 // ---------timeline----------
+
+func Timeline(w http.ResponseWriter, r *http.Request) {
+	var tcl = NewClient()
+
+	path := baseURL + "/statuses/home_timeline.json"
+	body := tcl.GetTimeline(path)
+	w.Write(body)
+}
 
 // --------------------------
 // ---------others----------
