@@ -22,7 +22,7 @@ import (
 //}
 
 // -------Followers----------
-func NewUsersClient() *users.Client {
+func NewFollowersClient() *users.Client {
 	conf, token, client := config.Set()
 
 	return &users.Client{
@@ -33,18 +33,14 @@ func NewUsersClient() *users.Client {
 }
 
 func Followers(w http.ResponseWriter, r *http.Request) {
-	var ucl = NewUsersClient()
+	var ucl = NewFollowersClient()
 	method := r.Method
 
 	if method == "GET" {
-		path := baseURL + "followers/list.json?count=1"
+		path := baseURL + "followers/list.json?count=1000"
 		body := ucl.GetFollowersList(path)
-
 		fmt.Println(string(body))
-		//Sep(string(body), ",")
 		fmt.Fprintf(w, string(body))
-	} else if method == "POST" {
-
 	}
 }
 
@@ -61,7 +57,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 // ----------Tweets-----------
 
 //func NewClient() (*config.Client, *tweets.Client) {
-func NewClient() *timeline.Client {
+func NewTimelineClient() *timeline.Client {
 	conf, token, client := config.Set()
 
 	return &timeline.Client{
@@ -76,7 +72,7 @@ func NewClient() *timeline.Client {
 // ---------timeline----------
 
 func Timeline(w http.ResponseWriter, r *http.Request) {
-	var tcl = NewClient()
+	var tcl = NewTimelineClient()
 
 	path := baseURL + "/statuses/home_timeline.json"
 	body := tcl.GetTimeline(path)
