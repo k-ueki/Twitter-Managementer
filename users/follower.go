@@ -8,22 +8,31 @@ import (
 	"github.com/k-ueki/TwitterManager/config"
 )
 
-//type Client struct {
-//	Config     *oauth1.Config
-//	Token      *oauth1.Token
-//	HttpClient *http.Client
-//}
 type Client config.Client
 
-func (u *Client) GetFollowersList(path string) []byte {
+func (u *Client) GetFollowersList(path, pathToGetIds string) []byte {
 	var followers []Followers
+	var ids FollowersIds
+	var db = &DBHandler{
+		DB: config.SetDB(),
+	}
 
-	resp, _ := u.HttpClient.Get(path)
-	defer resp.Body.Close()
+	respFollowers, _ := u.HttpClient.Get(path)
+	defer respFollowers.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &followers)
-	fmt.Println("Followers", followers, "\n")
+	//並列化できる？
+	respIds, _ := u.HttpClient.Get(pathToGetIds)
+	defer respIds.Body.Close()
 
-	return body
+	bodyFollowers, _ := ioutil.ReadAll(respFollowers.Body)
+	bodyIds, _ := ioutil.ReadAll(respIds.Body)
+	_ = json.Unmarshal(bodyFollowers, &followers)
+	_ = json.Unmarshal(bodyIds, &ids)
+
+	fmt.Println(ids.Ids)
+	if err := db.RegisterIds(ids); err != nil {
+		fmt.Println(err)
+	}
+
+	return bodyFollowers
 }

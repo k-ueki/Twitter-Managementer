@@ -1,6 +1,8 @@
 package users
 
-import "github.com/k-ueki/TwitterManager/entities"
+import (
+	"github.com/k-ueki/TwitterManager/entities"
+)
 
 type User struct {
 	Id                             int64             `json:id`
@@ -53,3 +55,45 @@ type Followers struct {
 	PreviousCursor    int64  `json:previous_cursor`
 	PreviousCursorStr string `json:previous_cursor_str`
 }
+
+type FollowersIds struct {
+	Ids               []int64 `json:ids`
+	NextCursor        int64   `json:next_cursor`
+	NextCursorStr     string  `json:next_cursor_str`
+	PreviousCursor    int64   `json:previous_cursor`
+	PreviousCursorStr string  `json:previous_cursor_str`
+}
+
+type UserInfo struct {
+	ScreenName string
+	UserId     int64
+	Follow     bool
+	Client     *Client
+}
+
+//const (
+//	baseURL = "https://api.twitter.com/1.1/"
+//)
+
+//func (u *UserInfo) UserShow() User {
+//	var result User
+//
+//	path := baseURL + "users/search.json?"
+//	if u.ScreenName != "" {
+//		path += "screen_name=" + u.ScreenName
+//	}
+//	if strings.Itoa(u.UserId) != "" {
+//		path += "user_id=" + strconv.Itoa(u.UserId)
+//	}
+//
+//	resp, _ := u.HttpClient.Get(path)
+//	defer resp.Body.Close()
+//
+//	body, _ := ioutil.ReadAll(resp.Body)
+//	_ = json.Unmarshal(body, &result)
+//	fmt.Println("result", result)
+//
+//	return result
+//}
+
+func main() {}

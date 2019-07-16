@@ -4,7 +4,7 @@
 		<button @click="getFollowers">getFollowers</button>
 		<div v-for="follower in followers">
 			<img :src="follower.profile_image_url">	
-			{{ follower.name }}<br/><br/></div>
+			{{ follower.name }}<br/>{{ follower }}<br/><br/></div>
 	</div>
 </template>
 <script>
