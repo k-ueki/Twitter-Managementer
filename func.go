@@ -3,23 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
 	"github.com/k-ueki/TwitterManager/timeline"
 	"github.com/k-ueki/TwitterManager/users"
 )
-
-//to Front
-// test to get timeline
-//func APISet(w http.ResponseWriter, r *http.Request) {
-//	var tcl = NewClient()
-//
-//	path := baseURL + "/statuses/home_timeline.json"
-//	body := tcl.GetTimeline(path)
-//	fmt.Println("HELLO")
-//	w.Write(body)
-//}
 
 // -------Followers----------
 func NewFollowersClient() *users.Client {
@@ -36,27 +24,31 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewFollowersClient()
 	method := r.Method
 
+	//-----
+	//	var userinfo = users.UserInfo{
+	//		ScreenName: "ku6_rx",
+	//		Client:     ucl,
+	//	}
+	//	test := userinfo.UserShow()
+	//	fmt.Println("OKOKOKOK", test)
+
+	//----
+
 	if method == "GET" {
-		path := baseURL + "followers/list.json?count=1000"
-		body := ucl.GetFollowersList(path)
-		fmt.Println(string(body))
+		pathToGetFollowers := baseURL + "followers/list.json"
+		pathToGetIds := baseURL + "followers/ids.json"
+		body := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 		fmt.Fprintf(w, string(body))
 	}
 }
-
-//func (c *config.Client) Followers(w http.ResponseWriter, r *http.Request) {
-//	v := url.Values{}
-//	v.Set("count", "1000")
-//
-//	followers, err := c.TwitterApi.GetFriendshipsLookup(v)
-//	fmt.Println(followers, err)
-//}
 
 // ---------------------------
 
 // ----------Tweets-----------
 
-//func NewClient() (*config.Client, *tweets.Client) {
+// ---------------------------
+
+// ---------timeline----------
 func NewTimelineClient() *timeline.Client {
 	conf, token, client := config.Set()
 
@@ -67,10 +59,6 @@ func NewTimelineClient() *timeline.Client {
 	}
 }
 
-// ---------------------------
-
-// ---------timeline----------
-
 func Timeline(w http.ResponseWriter, r *http.Request) {
 	var tcl = NewTimelineClient()
 
@@ -80,12 +68,3 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 }
 
 // --------------------------
-// ---------others----------
-func Sep(str, separator string) {
-	tmp := strings.Split(str, separator)
-	fmt.Println("TRMP", tmp)
-	fmt.Println("KOKOK", tmp[0])
-
-}
-
-// -------------------------
