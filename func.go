@@ -24,21 +24,20 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewFollowersClient()
 	method := r.Method
 
-	//-----
-	//	var userinfo = users.UserInfo{
-	//		ScreenName: "ku6_rx",
-	//		Client:     ucl,
-	//	}
-	//	test := userinfo.UserShow()
-	//	fmt.Println("OKOKOKOK", test)
-
-	//----
+	var db = &users.DBHandler{
+		DB: config.SetDB(),
+	}
 
 	if method == "GET" {
 		pathToGetFollowers := baseURL + "followers/list.json"
 		pathToGetIds := baseURL + "followers/ids.json"
-		body := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
-		fmt.Fprintf(w, string(body))
+		bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+
+		if err := db.RegisterIds(Ids); err != nil {
+			fmt.Println("ERR", err)
+		}
+
+		fmt.Fprintf(w, string(bodyF))
 	}
 }
 
