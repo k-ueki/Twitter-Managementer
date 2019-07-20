@@ -20,15 +20,15 @@ export default{
 		}
 	},
 	methods:{
-	//	getTweets(){
-	//		axios.get(base)
-	//			.then(response => {
-	//				this.tweets = response.data
-	//				console.log(response.data)
-	//			}).catch(error => {
-	//				console.log(error)
-	//			})
-	//	}
+//		getTweets(){
+//			axios.get(base)
+//				.then(response => {
+//					this.tweets = response.data
+//					console.log(response.data)
+//				}).catch(error => {
+//					console.log(error)
+//				})
+//		}
 	}
 }
 

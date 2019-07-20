@@ -3,6 +3,8 @@ package users
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/k-ueki/TwitterManager/db"
 )
 
 type DBHandler struct {
@@ -10,36 +12,32 @@ type DBHandler struct {
 }
 
 func (d *DBHandler) RegisterIds(ids FollowersIds) error {
-	fmt.Println("KITAYO")
-	fmt.Println(ids)
-	fmt.Println("O", ids.Ids)
-	d.BulkInsert()
-	//	_, err := db.Exec("insert into Followers (PersonalID,name,screen_name,following) values (?,?,?,?)", ids.)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	return &User{
-	//		Name:     u.Name,
-	//		UserId:   u.UserId,
-	//		Password: u.Password,
-	//		Email:    u.Email,
-	//		//File:u.File
-	//	}, nil
+	if err := d.BulkInsert(ids.Ids); err != nil {
+		fmt.Println("Err Bulk Insert", err)
+	}
 	return nil
 }
-func (d *DBHandler) BulkInsert() {
+func (d *DBHandler) BulkInsert(ids []int64) error {
 	type followers struct {
-		personalID int64
-		deleted    int
+		PersonalID int64
+		Deleted    int
+	}
+	flwers := []followers{}
+	for _, v := range ids {
+		flwers = append(flwers, followers{PersonalID: v})
 	}
 
-	flwers := []followers{}
-	flwers = append(flwers, followers{personalID: 234})
-	flwers = append(flwers, followers{personalID: 345})
-	flwers = append(flwers, followers{personalID: 456})
-	//follower = append(followers,)
-	fmt.Println("FFFFFFFFLWERS\n", flwers)
+	sess := db.SetSession()
+	stmt := sess.InsertInto("followers").Columns("personal_id")
 
-	//stmt := sees.InsertInto("followers").Columns("PersonalID")
-	//fmt.Println(stmt)
+	for _, v := range flwers {
+		stmt.Record(v)
+	}
+
+	_, err := stmt.Exec()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }

@@ -2,7 +2,6 @@ package users
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/k-ueki/TwitterManager/config"
@@ -10,12 +9,12 @@ import (
 
 type Client config.Client
 
-func (u *Client) GetFollowersList(path, pathToGetIds string) []byte {
+func (u *Client) GetFollowersList(path, pathToGetIds string) ([]byte, FollowersIds) {
 	var followers []Followers
 	var ids FollowersIds
-	var db = &DBHandler{
-		DB: config.SetDB(),
-	}
+	//	var db = &DBHandler{
+	//		DB: config.SetDB(),
+	//	}
 
 	respFollowers, _ := u.HttpClient.Get(path)
 	defer respFollowers.Body.Close()
@@ -29,10 +28,9 @@ func (u *Client) GetFollowersList(path, pathToGetIds string) []byte {
 	_ = json.Unmarshal(bodyFollowers, &followers)
 	_ = json.Unmarshal(bodyIds, &ids)
 
-	fmt.Println(ids.Ids)
-	if err := db.RegisterIds(ids); err != nil {
-		fmt.Println(err)
-	}
+	//	if err := db.RegisterIds(ids); err != nil {
+	//		fmt.Println(err)
+	//	}
 
-	return bodyFollowers
+	return bodyFollowers, ids
 }
