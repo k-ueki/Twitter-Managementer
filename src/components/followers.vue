@@ -33,9 +33,7 @@ export default{
 				})
 		},
 		getFollowers(){
-			var params = new URLSearchParams();
-			params.append("mode","get");
-			axios.post(base,params)
+			axios.get(base)
 				.then(resp=>{
 					this.followers = resp.data.users
 				}).catch(err=>{

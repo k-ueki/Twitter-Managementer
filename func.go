@@ -24,10 +24,11 @@ func NewFollowersClient() *users.Client {
 
 func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewFollowersClient()
-	//method := r.Method
 
-	mode := GetMode(r)
-	fmt.Println(mode)
+	var mode string
+	if r.ContentLength != 0 {
+		mode = GetMode(r)
+	}
 
 	var dbh = &db.DBHandler{
 		DB: config.SetDB(),
@@ -36,11 +37,24 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
 	bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+
 	if mode == "register" {
-		//if err := dbh.RegisterIds(Ids); err != nil {
-		//	fmt.Println("ERR", err)
-		//}
+		//selectfromfollowers
+		count, fromdb := dbh.Select("followers")
+		fmt.Println(count)
+
+		//dbの情報とIdsを比較
+		db.Comp(&Ids, fromdb)
+		fmt.Println() //Ids
+
+		//		if err := dbh.RegisterIds(Ids); err != nil {
+		//			fmt.Println("ERR", err)
+		//		}
 		fmt.Println("OK")
+
+		//fmt.Println(err)
+		//fmt.Fprintf(w,string("success for inserting!"))
+		//return
 	}
 
 	fmt.Println(dbh, Ids)
