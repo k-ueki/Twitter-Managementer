@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
+	"github.com/k-ueki/TwitterManager/db"
 	"github.com/k-ueki/TwitterManager/timeline"
 	"github.com/k-ueki/TwitterManager/users"
 )
@@ -28,20 +29,21 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	mode := GetMode(r)
 	fmt.Println(mode)
 
-	var db = &users.DBHandler{
+	var dbh = &db.DBHandler{
 		DB: config.SetDB(),
 	}
-	fmt.Println(db)
 
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
 	bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 	if mode == "register" {
-		if err := db.RegisterIds(Ids); err != nil {
-			fmt.Println("ERR", err)
-		}
+		//if err := dbh.RegisterIds(Ids); err != nil {
+		//	fmt.Println("ERR", err)
+		//}
+		fmt.Println("OK")
 	}
 
+	fmt.Println(dbh, Ids)
 	fmt.Fprintf(w, string(bodyF))
 }
 
