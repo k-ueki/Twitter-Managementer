@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>Followers</h1>
-		<button @click="registerFollowers">RegisterFollowers</button>
+		<button @click="followedStatus">FollowedStatus</button>
 		<button @click="getFollowers">GetFollowers'List</button>
 		<div v-for="follower in followers">
 			<img :src="follower.profile_image_url">	
@@ -21,7 +21,7 @@ export default{
 		}
 	},
 	methods:{
-		registerFollowers(){
+		followedStatus(){
 			var params = new URLSearchParams();
 			params.append("mode","register");
 			axios.post(base,params)
