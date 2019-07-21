@@ -21,46 +21,6 @@ func (d *DBHandler) RegisterIds(ids users.FollowersIds) error {
 	}
 	return nil
 }
-func (d *DBHandler) DropOutByes(ids users.FollowersIds) {
-	d.Drop(ids.Ids)
-}
-func (d *DBHandler) BulkInsert(ids []int64) error {
-	flwers := []follower{}
-	for _, v := range ids {
-		flwers = append(flwers, follower{PersonalID: v})
-	}
-
-	sess := SetSession()
-	stmt := sess.InsertInto("followers").Columns("personal_id")
-
-	for _, v := range flwers {
-		stmt.Record(v)
-	}
-
-	_, err := stmt.Exec()
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	return nil
-}
-func (d *DBHandler) Drop(ids []int64) {
-	sess := SetSession()
-	for _, v := range ids {
-		sess.DeleteFrom("followers").Where("personal_id=?", v).Exec()
-	}
-}
-func (d *DBHandler) Select(tablename string) (int, []follower) {
-	resp := []follower{}
-
-	sess := SetSession()
-	count, err := sess.Select("personal_id,deleted").From(tablename).Where("deleted=?", 0).Load(&resp)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return count, resp
-}
 func FindNewBye(ids *users.FollowersIds, followers []follower) (newfollowers, byefollowers users.FollowersIds) {
 
 NewFollowers:
