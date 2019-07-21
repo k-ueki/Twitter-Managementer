@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
+	"github.com/k-ueki/TwitterManager/db"
 	"github.com/k-ueki/TwitterManager/timeline"
 	"github.com/k-ueki/TwitterManager/users"
 )
@@ -22,23 +24,27 @@ func NewFollowersClient() *users.Client {
 
 func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewFollowersClient()
-	method := r.Method
+	//method := r.Method
 
-	var db = &users.DBHandler{
+	mode := GetMode(r)
+	fmt.Println(mode)
+
+	var dbh = &db.DBHandler{
 		DB: config.SetDB(),
 	}
 
-	if method == "GET" {
-		pathToGetFollowers := baseURL + "followers/list.json"
-		pathToGetIds := baseURL + "followers/ids.json"
-		bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
-
-		if err := db.RegisterIds(Ids); err != nil {
-			fmt.Println("ERR", err)
-		}
-
-		fmt.Fprintf(w, string(bodyF))
+	pathToGetFollowers := baseURL + "followers/list.json"
+	pathToGetIds := baseURL + "followers/ids.json"
+	bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+	if mode == "register" {
+		//if err := dbh.RegisterIds(Ids); err != nil {
+		//	fmt.Println("ERR", err)
+		//}
+		fmt.Println("OK")
 	}
+
+	fmt.Println(dbh, Ids)
+	fmt.Fprintf(w, string(bodyF))
 }
 
 // ---------------------------
@@ -67,3 +73,12 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 }
 
 // --------------------------
+func GetMode(r *http.Request) string {
+	var body = make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	return Separate(string(body))
+}
+func Separate(str string) string {
+	tmp := strings.Split(str, "=")
+	return tmp[1]
+}

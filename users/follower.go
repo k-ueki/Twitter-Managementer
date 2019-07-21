@@ -12,9 +12,6 @@ type Client config.Client
 func (u *Client) GetFollowersList(path, pathToGetIds string) ([]byte, FollowersIds) {
 	var followers []Followers
 	var ids FollowersIds
-	//	var db = &DBHandler{
-	//		DB: config.SetDB(),
-	//	}
 
 	respFollowers, _ := u.HttpClient.Get(path)
 	defer respFollowers.Body.Close()
@@ -27,10 +24,6 @@ func (u *Client) GetFollowersList(path, pathToGetIds string) ([]byte, FollowersI
 	bodyIds, _ := ioutil.ReadAll(respIds.Body)
 	_ = json.Unmarshal(bodyFollowers, &followers)
 	_ = json.Unmarshal(bodyIds, &ids)
-
-	//	if err := db.RegisterIds(ids); err != nil {
-	//		fmt.Println(err)
-	//	}
 
 	return bodyFollowers, ids
 }

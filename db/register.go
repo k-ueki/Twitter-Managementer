@@ -1,17 +1,17 @@
-package users
+package db
 
 import (
 	"database/sql"
 	"fmt"
 
-	"github.com/k-ueki/TwitterManager/db"
+	"github.com/k-ueki/TwitterManager/users"
 )
 
 type DBHandler struct {
 	DB *sql.DB
 }
 
-func (d *DBHandler) RegisterIds(ids FollowersIds) error {
+func (d *DBHandler) RegisterIds(ids users.FollowersIds) error {
 	if err := d.BulkInsert(ids.Ids); err != nil {
 		fmt.Println("Err Bulk Insert", err)
 	}
@@ -27,7 +27,7 @@ func (d *DBHandler) BulkInsert(ids []int64) error {
 		flwers = append(flwers, followers{PersonalID: v})
 	}
 
-	sess := db.SetSession()
+	sess := SetSession()
 	stmt := sess.InsertInto("followers").Columns("personal_id")
 
 	for _, v := range flwers {
