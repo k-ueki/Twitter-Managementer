@@ -52,17 +52,15 @@ func (d *DBHandler) Select(tablename string) (int, []follower) {
 
 	return count, resp
 }
-func Comp(ids *users.FollowersIds, followers []follower) {
-	var newfollowers users.FollowersIds
-	fmt.Println(newfollowers)
+func FindNewBye(ids *users.FollowersIds, followers []follower) (newfollowers, byefollowers users.FollowersIds) {
 
-A:
+NewFollowers:
 	//Idsの番号がdbにあるかチェック
 	//速度改善の余地あり(今はとりあえず次へ行きます)
-	for i, v := range ids.Ids {
+	for _, v := range ids.Ids {
 		for i2, v2 := range followers {
 			if v == v2.PersonalID {
-				continue A
+				continue NewFollowers
 			}
 			if i2+1 == len(followers) {
 				newfollowers.Ids = append(newfollowers.Ids, v)
@@ -70,5 +68,20 @@ A:
 		}
 	}
 
-	fmt.Println(newfollowers)
+ByeFollowers:
+	//DBの中の番号がIdsにあるかチェック
+	//速度改善の余地あり
+	for _, v := range followers {
+		//fmt.Println(v.PersonalID)
+		for i2, v2 := range ids.Ids {
+			if v.PersonalID == v2 {
+				continue ByeFollowers
+			}
+			if i2+1 == len(ids.Ids) {
+				byefollowers.Ids = append(byefollowers.Ids, v.PersonalID)
+			}
+		}
+	}
+
+	return newfollowers, byefollowers
 }

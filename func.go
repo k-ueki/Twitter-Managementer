@@ -44,12 +44,13 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(count)
 
 		//dbの情報とIdsを比較
-		db.Comp(&Ids, fromdb)
-		fmt.Println() //Ids
+		fmt.Println("FROMDB", fromdb)
+		newf, byef := db.FindNewBye(&Ids, fromdb)
+		fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
-		//		if err := dbh.RegisterIds(Ids); err != nil {
-		//			fmt.Println("ERR", err)
-		//		}
+		if err := dbh.RegisterIds(newf); err != nil {
+			fmt.Println("ERR", err)
+		}
 		fmt.Println("OK")
 
 		//fmt.Println(err)
