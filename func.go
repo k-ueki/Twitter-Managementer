@@ -39,9 +39,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 
 	if mode == "register" {
-		//selectfromfollowers
-		count, fromdb := dbh.Select("followers")
-		fmt.Println(count)
+		_, fromdb := dbh.Select("followers")
 
 		//dbの情報とIdsを比較
 		newf, byef := db.FindNewBye(&Ids, fromdb)
@@ -53,12 +51,12 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		//}
 		//fmt.Println("OK")
 
-		//new register
+		//-----------new register
 		if err := dbh.RegisterIds(newf); err != nil {
 			fmt.Println("ERR", err)
 		}
 
-		//bye dropout
+		//------------bye dropout
 		if len(byef.Ids) >= 1 {
 			dbh.DropOutByes(byef)
 		}
