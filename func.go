@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -36,7 +37,8 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
-	bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+	_, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+	//bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 
 	if mode == "register" {
 		_, fromdb := dbh.Select("followers")
@@ -45,12 +47,32 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		newf, byef := db.FindNewBye(&Ids, fromdb)
 		fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
+		//var resp map[string][]string
+		type responseStruct struct {
+			Mode  string       `json:mode`
+			Users []users.User `json:users`
+		}
+		var resp = make([]responseStruct, 2)
 		if len(byef.Ids) != 0 {
-			body := ucl.ConvertIdsToUsers(byef.Ids)
-			fmt.Fprintf(w, string(body))
-			return
+			resp[1].Mode = "bye"
+			users := ucl.ConvertIdsToUsers(byef.Ids)
+			resp[1].Users = users
+			fmt.Println("RESP", resp)
 		}
 
+		if len(newf.Ids) != 0 {
+			resp[0].Mode = "new"
+			users := ucl.ConvertIdsToUsers(newf.Ids)
+			resp[0].Users = users
+			fmt.Println("RESP", resp)
+		}
+
+		bytes, _ := json.Marshal(&resp)
+		fmt.Fprintf(w, string(bytes))
+		//fmt.Println(resp)
+		//binary := []byte(resp)
+		//fmt.Fprintf(w, string(binary))
+		return
 		//init register
 		//if err := dbh.RegisterIds(Ids); err != nil {
 		//	fmt.Println("ERR", err)
@@ -70,7 +92,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//fmt.Println(dbh, Ids)
-	fmt.Println(string(bodyF))
+	//fmt.Println(string(bodyF))
 	//	fmt.Fprintf(w, string(bodyF))
 }
 
