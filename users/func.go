@@ -7,8 +7,7 @@ import (
 	"strconv"
 )
 
-//func ConvertIdsToUsers(ids []int64) users.User {
-func (u *Client) ConvertIdsToUsers(ids []int64) []byte {
+func (u *Client) ConvertIdsToUsers(ids []int64) []User {
 	var users []User
 	var nums string
 
@@ -34,5 +33,5 @@ func (u *Client) ConvertIdsToUsers(ids []int64) []byte {
 
 	fmt.Println(users)
 
-	return body
+	return users
 }

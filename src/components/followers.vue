@@ -3,13 +3,34 @@
 		<h1>Followers</h1>
 		<button @click="followedStatus">FollowedStatus</button>
 		<button @click="getFollowers">GetFollowers'List</button>
-		<div v-for="follower in followers">
-			<img :src="follower.profile_image_url">	
-			<a v-bind:href="'https://twitter.com/' + follower.screen_name">{{ follower.name }}</a><br/>
-			<!--
-			{{follower}}<br/><br/>
-			-->
-			<br/>
+
+		<div class="dispAreaWrapper">
+			<div class="news">
+				<h3>New!</h3>
+				<div v-for="newfollower in newfollowers">
+					<!--
+					{{newfollower}}
+					-->
+					<img :src="newfollower.ProfileImageUrl">	
+					<a v-bind:href="'https://twitter.com/' + newfollower.ScreenName">{{ newfollower.Name }}</a><br/>
+					<br/>
+					<button class="">+</button>
+					<button class="">x</button>
+				</div>
+			</div>
+			<div class="byes">
+				<h3>Bye!</h3>
+				<div v-for="byefollower in byefollowers">
+					<!--
+					{{byefollower}}
+					-->
+					<img :src="byefollower.ProfileImageUrl">	
+					<a v-bind:href="'https://twitter.com/' + byefollower.ScreenName">{{ byefollower.Name }}</a><br/>
+					<br/>
+					<button class="">+</button>
+					<button class="">x</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -22,7 +43,8 @@ export default{
 	name:"main",
 	data(){
 		return {
-			followers:[],
+			newfollowers:[],
+			byefollowers:[],
 		}
 	},
 	methods:{
@@ -31,9 +53,8 @@ export default{
 			params.append("mode","register");
 			axios.post(base,params)
 				.then(response => {
-					this.followers = response.data
-					//this.followers = response.data
-					console.log(response.data)
+					this.newfollowers = response.data[0].Users
+					this.byefollowers = response.data[1].Users
 				}).catch(error => {
 					console.log(error)
 				})
@@ -51,5 +72,19 @@ export default{
 
 </script>
 <style>
+.dispAreaWrapper{
 
+}
+.news{
+	width:40%;
+	margin-left:10%;
+	float:left;	
+	border:2px black solid;
+}
+.byes{
+	width:40%;
+	margin-right:10%;
+	float:right;
+	border:2px black solid;
+}
 </style>
