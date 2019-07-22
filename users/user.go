@@ -4,6 +4,10 @@ import (
 	"github.com/k-ueki/TwitterManager/entities"
 )
 
+const (
+	baseURL = "https://api.twitter.com/1.1/"
+)
+
 type User struct {
 	Id                             int64             `json:id`
 	IdStr                          string            `json:id_str`
