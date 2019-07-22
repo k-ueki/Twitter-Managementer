@@ -5,7 +5,12 @@
 		<button @click="getFollowers">GetFollowers'List</button>
 		<div v-for="follower in followers">
 			<img :src="follower.profile_image_url">	
-			{{ follower.name }}<br/>{{ follower }}<br/><br/></div>
+			<a v-bind:href="'https://twitter.com/' + follower.screen_name">{{ follower.name }}</a><br/>
+			<!--
+			{{follower}}<br/><br/>
+			-->
+			<br/>
+		</div>
 	</div>
 </template>
 <script>
@@ -26,7 +31,8 @@ export default{
 			params.append("mode","register");
 			axios.post(base,params)
 				.then(response => {
-					this.followers = response.data.users
+					this.followers = response.data
+					//this.followers = response.data
 					console.log(response.data)
 				}).catch(error => {
 					console.log(error)

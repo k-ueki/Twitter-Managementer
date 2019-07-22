@@ -12,7 +12,7 @@ import (
 )
 
 // -------Followers----------
-func NewFollowersClient() *users.Client {
+func NewUsersClient() *users.Client {
 	conf, token, client := config.Set()
 
 	return &users.Client{
@@ -23,7 +23,7 @@ func NewFollowersClient() *users.Client {
 }
 
 func Followers(w http.ResponseWriter, r *http.Request) {
-	var ucl = NewFollowersClient()
+	var ucl = NewUsersClient()
 
 	var mode string
 	if r.ContentLength != 0 {
@@ -45,26 +45,33 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		newf, byef := db.FindNewBye(&Ids, fromdb)
 		fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
+		if len(byef.Ids) != 0 {
+			body := ucl.ConvertIdsToUsers(byef.Ids)
+			fmt.Fprintf(w, string(body))
+			return
+		}
+
 		//init register
 		//if err := dbh.RegisterIds(Ids); err != nil {
 		//	fmt.Println("ERR", err)
 		//}
 		//fmt.Println("OK")
 
-		//-----------new register
-		if err := dbh.RegisterIds(newf); err != nil {
-			fmt.Println("ERR", err)
-		}
+		//-----------new register動作確認済み
+		//		if err := dbh.RegisterIds(newf); err != nil {
+		//			fmt.Println("ERR", err)
+		//		}
 
-		//------------bye dropout
-		if len(byef.Ids) >= 1 {
-			dbh.DropOutByes(byef)
-		}
+		//------------bye dropout動作確認済み
+		//if len(byef.Ids) >= 1 {
+		//dbh.DropOutByes(byef)
+		//}
 
 	}
 
-	fmt.Println(dbh, Ids)
-	fmt.Fprintf(w, string(bodyF))
+	//fmt.Println(dbh, Ids)
+	fmt.Println(string(bodyF))
+	//	fmt.Fprintf(w, string(bodyF))
 }
 
 // ---------------------------
