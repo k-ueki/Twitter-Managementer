@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func (u *Client) ConvertIdsToUsers(ids []int64) []User {
+func (u *Client) ConvertIdsToUsers(ids []int64) ([]User, []byte) {
 	var users []User
 	var nums string
 
@@ -20,18 +20,18 @@ func (u *Client) ConvertIdsToUsers(ids []int64) []User {
 		if i == 0 {
 			nums += strconv.FormatInt(v, 10)
 		}
-		fmt.Println(i)
 	}
 	url += nums
-	fmt.Println(url)
 
 	resp, _ := u.HttpClient.Get(url)
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(body, &users)
 
-	fmt.Println(users)
+	if err := json.Unmarshal(body, &users); err != nil {
+		fmt.Println("Err:", err)
+		return nil, nil
+	}
 
-	return users
+	return users, body
 }
