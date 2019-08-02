@@ -37,9 +37,28 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
+
 	_, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 	//bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 
+	if mode == "init" {
+
+		err := dbh.TruncateTable("followers")
+		if err != nil {
+			fmt.Println("truncate err:", err)
+			fmt.Fprintf(w, "Truncate Error", err)
+			return
+		}
+
+		//init register
+		if err := dbh.RegisterIds(Ids); err != nil {
+			fmt.Println("ERR", err)
+			return
+		}
+		fmt.Println("Complete Init your followers")
+		fmt.Fprintf(w, "Complete Init your followers")
+		return
+	}
 	if mode == "register" {
 		_, fromdb := dbh.Select("followers")
 
