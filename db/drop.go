@@ -17,12 +17,10 @@ func (d *DBHandler) Drop(ids []int64) {
 }
 
 func (d *DBHandler) TruncateTable(str string) error {
-	fmt.Println(d)
 	_, err := d.DB.Exec(fmt.Sprintf(`truncate table %s`, str))
 	if err != nil {
 		fmt.Println("err:", err)
 		return err
 	}
-
 	return nil
 }

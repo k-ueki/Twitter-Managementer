@@ -56,7 +56,7 @@ export default{
 					params.append("mode","init");
 					axios.post(base,params)
 						.then(response=>{
-							
+										
 						}).catch(error=>{
 
 						})
