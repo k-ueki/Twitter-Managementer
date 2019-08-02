@@ -50,7 +50,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//init register
 		if err := dbh.RegisterIds(Ids); err != nil {
 			fmt.Println("ERR", err)
 			return
@@ -59,6 +58,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Complete Init your followers")
 		return
 	}
+
 	if mode == "register" {
 		_, fromdb := dbh.Select("followers")
 
@@ -85,12 +85,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		bytes, _ := json.Marshal(&resp)
 		fmt.Fprintf(w, string(bytes))
 		return
-
-		//init register
-		//if err := dbh.RegisterIds(Ids); err != nil {
-		//	fmt.Println("ERR", err)
-		//}
-		//fmt.Println("OK")
 
 		//-----------new register動作確認済み
 		//		if err := dbh.RegisterIds(newf); err != nil {
