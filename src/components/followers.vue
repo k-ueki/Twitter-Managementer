@@ -11,11 +11,11 @@
 					<!--
 					{{newfollower}}
 					-->
-					<img :src="newfollower.ProfileImageUrl">	
-					<a v-bind:href="'https://twitter.com/' + newfollower.ScreenName">{{ newfollower.Name }}</a><br/>
+					<img :src="newfollower.profile_image_url">	
+					<a v-bind:href="'https://twitter.com/' + newfollower.screen_name">{{ newfollower.name }}</a><br/>
 					<br/>
-					<button class="">+</button>
-					<button class="">x</button>
+					<button class="follow" @click="follow">Follow</button>
+					<button class="hidden" @click="hidden">Hidden</button>
 				</div>
 			</div>
 			<div class="byes">
@@ -24,11 +24,11 @@
 					<!--
 					{{byefollower}}
 					-->
-					<img :src="byefollower.ProfileImageUrl">	
-					<a v-bind:href="'https://twitter.com/' + byefollower.ScreenName">{{ byefollower.Name }}</a><br/>
+					<img :src="byefollower.profile_image_url">	
+					<a v-bind:href="'https://twitter.com/' + byefollower.screen_name">{{ byefollower.name }}</a><br/>
 					<br/>
-					<button class="">+</button>
-					<button class="">x</button>
+					<button class="unfollow" @click="unfollow">Unfollow</button>
+					<button class="hidden" @click="hidden">Hidden</button>
 				</div>
 			</div>
 		</div>
@@ -53,8 +53,10 @@ export default{
 			params.append("mode","register");
 			axios.post(base,params)
 				.then(response => {
-					this.newfollowers = response.data[0].Users
-					this.byefollowers = response.data[1].Users
+					this.newfollowers = response.data[0].users
+					this.byefollowers = response.data[1].users
+					console.log(response.data)
+					console.log(response)
 				}).catch(error => {
 					console.log(error)
 				})
@@ -66,7 +68,19 @@ export default{
 				}).catch(err=>{
 					console.log(err)
 				})
+		},
+		follow(){
+			console.log("follow")
+		},
+		unfollow(){
+			if(confirm("Sure?")){
+				console.log("unfollow")
+			}
+		},
+		hidden(){
+			console.log("hidden")
 		}
+
 	}
 }
 
@@ -79,12 +93,10 @@ export default{
 	width:40%;
 	margin-left:10%;
 	float:left;	
-	border:2px black solid;
 }
 .byes{
 	width:40%;
 	margin-right:10%;
 	float:right;
-	border:2px black solid;
 }
 </style>

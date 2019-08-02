@@ -10,7 +10,7 @@ import (
 type Client config.Client
 
 func (u *Client) GetFollowersList(path, pathToGetIds string) ([]byte, FollowersIds) {
-	var followers []Followers
+	var followers Followers
 	var ids FollowersIds
 
 	respFollowers, _ := u.HttpClient.Get(path)
@@ -22,7 +22,11 @@ func (u *Client) GetFollowersList(path, pathToGetIds string) ([]byte, FollowersI
 
 	bodyFollowers, _ := ioutil.ReadAll(respFollowers.Body)
 	bodyIds, _ := ioutil.ReadAll(respIds.Body)
+
+	//	fmt.Println(string(bodyFollowers))
+	//	fmt.Println()
 	_ = json.Unmarshal(bodyFollowers, &followers)
+	//fmt.Println(followers)
 	_ = json.Unmarshal(bodyIds, &ids)
 
 	return bodyFollowers, ids

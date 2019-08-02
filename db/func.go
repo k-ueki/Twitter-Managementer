@@ -21,7 +21,7 @@ func (d *DBHandler) RegisterIds(ids users.FollowersIds) error {
 	}
 	return nil
 }
-func FindNewBye(ids *users.FollowersIds, followers []follower) (newfollowers, byefollowers users.FollowersIds) {
+func FindNewByeIds(ids *users.FollowersIds, followers []follower) (newfollowers, byefollowers users.FollowersIds) {
 
 NewFollowers:
 	//Idsの番号がdbにあるかチェック
