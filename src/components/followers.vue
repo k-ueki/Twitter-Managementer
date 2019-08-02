@@ -1,12 +1,13 @@
 <template>
 	<div>
 		<h1>Followers</h1>
+		<button @click="initFollowers">Init Followers</button>
 		<button @click="followedStatus">FollowedStatus</button>
 		<button @click="getFollowers">GetFollowers'List</button>
 
 		<div class="dispAreaWrapper">
 			<div class="news">
-				<h3>New!</h3>
+				<h3 style="color:#00FF00;">New!</h3>
 				<div v-for="newfollower in newfollowers">
 					<!--
 					{{newfollower}}
@@ -19,7 +20,7 @@
 				</div>
 			</div>
 			<div class="byes">
-				<h3>Bye!</h3>
+				<h3 style="color:red;">Bye!</h3>
 				<div v-for="byefollower in byefollowers">
 					<!--
 					{{byefollower}}
@@ -48,6 +49,20 @@ export default{
 		}
 	},
 	methods:{
+		initFollowers(){
+			if(confirm("init your followers for sure?")){
+				if(confirm("for sure?")){
+					var params = new URLSearchParams();
+					params.append("mode","init");
+					axios.post(base,params)
+						.then(response=>{
+							
+						}).catch(error=>{
+
+						})
+				}
+			}
+		},
 		followedStatus(){
 			var params = new URLSearchParams();
 			params.append("mode","register");
@@ -80,6 +95,7 @@ export default{
 		hidden(){
 			console.log("hidden")
 		}
+
 
 	}
 }
