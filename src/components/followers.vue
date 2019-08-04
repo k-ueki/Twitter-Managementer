@@ -29,7 +29,7 @@
 					<img :src="byefollower.profile_image_url">	
 					<a v-bind:href="'https://twitter.com/' + byefollower.screen_name">{{ byefollower.name }}</a><br/>
 					<br/>
-					<button class="unfollow" @click="unfollow">Unfollow</button>
+					<button class="unfollow" @click="unfollow(byefollower.id_str,byefollower.screen_name)">Unfollow</button>
 					<button class="hidden" @click="hidden">Hidden</button>
 				</div>
 			</div>
@@ -89,6 +89,7 @@ export default{
 			if(confirm("follow for sure?")){
 				var params = new URLSearchParams();		
 				params.append("mode","follow");
+				params.append("typef","follow")
 				params.append("user_id",user_id)
 				params.append("screen_name",screen_name)
 
@@ -100,9 +101,20 @@ export default{
 					})
 			}
 		},
-		unfollow(){
+		unfollow(user_id,screen_name){
 			if(confirm("unfollow for sure?")){
-				console.log("unfollow")
+				var params = new URLSearchParams();
+				params.append("mode","follow")
+				params.append("typef","unfollow")
+				params.append("user_id",user_id)
+				params.append("screen_name",screen_name)
+
+				axios.post(base,params)
+					.then(response=>{
+
+					}).catch(err=>{
+
+					})
 			}
 		},
 		hidden(){
