@@ -16,7 +16,7 @@
 					<img :src="newfollower.profile_image_url">	
 					<a v-bind:href="'https://twitter.com/' + newfollower.screen_name">{{ newfollower.name }}</a><br/>
 					<br/>
-					<button class="follow" @click="follow(newfollower.id,newfollower.screen_name)">Follow</button>
+					<button class="follow" @click="follow(newfollower.id_str,newfollower.screen_name)">Follow</button>
 					<button class="hidden" @click="hidden">Hidden</button>
 				</div>
 			</div>
