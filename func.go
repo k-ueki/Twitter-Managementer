@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/k-ueki/TwitterManager/config"
@@ -11,6 +13,12 @@ import (
 	"github.com/k-ueki/TwitterManager/timeline"
 	"github.com/k-ueki/TwitterManager/users"
 )
+
+type reqbody struct {
+	mode             string
+	user_id          string
+	user_screen_name string
+}
 
 // -------Followers----------
 func NewUsersClient() *users.Client {
@@ -25,11 +33,12 @@ func NewUsersClient() *users.Client {
 
 func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewUsersClient()
+	req := reqbody{}
 
-	var mode string
 	if r.ContentLength != 0 {
-		mode = GetMode(r)
+		req = SepRequest(r)
 	}
+	fmt.Println(req)
 
 	var dbh = &db.DBHandler{
 		DB: config.SetDB(),
@@ -41,7 +50,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	_, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 	//bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 
-	if mode == "init" {
+	if req.mode == "init" {
 
 		err := dbh.TruncateTable("followers")
 		if err != nil {
@@ -59,7 +68,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if mode == "status" {
+	if req.mode == "status" {
 		_, fromdb := dbh.Select("followers")
 
 		//dbの情報とIdsを比較
@@ -67,19 +76,18 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
 		var resp = make([]users.ResponseStruct, 2)
+
 		if len(byef.Ids) != 0 {
 			resp[1].Mode = "bye"
 			users, _ := ucl.ConvertIdsToUsers(byef.Ids)
 
 			resp[1].Users = users
-			fmt.Println("RESP\n", resp)
 		}
 
 		if len(newf.Ids) != 0 {
 			resp[0].Mode = "new"
 			users, _ := ucl.ConvertIdsToUsers(newf.Ids)
 			resp[0].Users = users
-			fmt.Println("RESP", resp)
 		}
 
 		bytes, _ := json.Marshal(&resp)
@@ -97,6 +105,31 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		//dbh.DropOutByes(byef)
 		//}
 
+	}
+
+	if req.mode == "follow" {
+		_, fromdb := dbh.Select("followers")
+
+		user := users.FollowersIds{}
+
+		num, _ := strconv.Atoi(req.user_id)
+		user.Ids = append(user.Ids, int64(num))
+
+		if !db.IsContain(int64(num), fromdb) {
+			if err := dbh.RegisterIds(user); err != nil {
+				fmt.Println("follow err:", err)
+			}
+		} else {
+			fmt.Println("KJJ")
+		}
+
+		params := "?screen_name=" + req.user_screen_name + "&follow=true"
+		url := "https://api.twitter.com/1.1/friendships/create.json" + params
+
+		resp, err := ucl.HttpClient.PostForm(url, nil)
+		if err != nil {
+			fmt.Println("POST error : ", err)
+		}
 	}
 
 }
@@ -127,10 +160,17 @@ func Timeline(w http.ResponseWriter, r *http.Request) {
 }
 
 // --------------------------
-func GetMode(r *http.Request) string {
-	var body = make([]byte, r.ContentLength)
-	r.Body.Read(body)
-	return Separate(string(body))
+func SepRequest(r *http.Request) reqbody {
+	res := reqbody{}
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println("ParseError:", err)
+	}
+	res.mode = r.Form.Get("mode")
+	res.user_id = r.Form.Get("user_id")
+	res.user_screen_name = r.Form.Get("screen_name")
+
+	return res
 }
 func Separate(str string) string {
 	tmp := strings.Split(str, "=")
