@@ -54,3 +54,11 @@ ByeFollowers:
 
 	return newfollowers, byefollowers
 }
+func IsContain(new_user_id int64, fromdb []follower) bool {
+	for _, v := range fromdb {
+		if v.PersonalID == new_user_id {
+			return true
+		}
+	}
+	return false
+}

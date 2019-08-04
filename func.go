@@ -59,7 +59,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if mode == "register" {
+	if mode == "status" {
 		_, fromdb := dbh.Select("followers")
 
 		//dbの情報とIdsを比較
@@ -84,6 +84,7 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 		bytes, _ := json.Marshal(&resp)
 		fmt.Fprintf(w, string(bytes))
+
 		return
 
 		//-----------new register動作確認済み

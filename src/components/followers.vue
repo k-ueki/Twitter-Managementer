@@ -4,6 +4,7 @@
 		<button @click="initFollowers">Init Followers</button>
 		<button @click="followedStatus">FollowedStatus</button>
 		<button @click="getFollowers">GetFollowers'List</button>
+		<button @click="">Hiddened List</button>
 
 		<div class="dispAreaWrapper">
 			<div class="news">
@@ -15,7 +16,7 @@
 					<img :src="newfollower.profile_image_url">	
 					<a v-bind:href="'https://twitter.com/' + newfollower.screen_name">{{ newfollower.name }}</a><br/>
 					<br/>
-					<button class="follow" @click="follow">Follow</button>
+					<button class="follow" @click="follow(newfollower.id,newfollower.screen_name)">Follow</button>
 					<button class="hidden" @click="hidden">Hidden</button>
 				</div>
 			</div>
@@ -65,7 +66,7 @@ export default{
 		},
 		followedStatus(){
 			var params = new URLSearchParams();
-			params.append("mode","register");
+			params.append("mode","status");
 			axios.post(base,params)
 				.then(response => {
 					this.newfollowers = response.data[0].users
@@ -84,11 +85,23 @@ export default{
 					console.log(err)
 				})
 		},
-		follow(){
-			console.log("follow")
+		follow(user_id,screen_name){
+			if(confirm("follow for sure?")){
+				var params = new URLSearchParams();		
+				params.append("mode","follow");
+				params.append("user_id",user_id)
+				params.append("screen_name",screen_name)
+
+				axios.post(base,params)
+					.then(response=>{
+						followStatus();
+					}).catch(error=>{
+
+					})
+			}
 		},
 		unfollow(){
-			if(confirm("Sure?")){
+			if(confirm("unfollow for sure?")){
 				console.log("unfollow")
 			}
 		},
