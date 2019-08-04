@@ -65,7 +65,7 @@ export default{
 		},
 		followedStatus(){
 			var params = new URLSearchParams();
-			params.append("mode","register");
+			params.append("mode","status");
 			axios.post(base,params)
 				.then(response => {
 					this.newfollowers = response.data[0].users
