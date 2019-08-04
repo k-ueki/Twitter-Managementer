@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,6 +15,7 @@ import (
 
 type reqbody struct {
 	mode             string
+	typef            string
 	user_id          string
 	user_screen_name string
 }
@@ -92,19 +92,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 		bytes, _ := json.Marshal(&resp)
 		fmt.Fprintf(w, string(bytes))
-
-		return
-
-		//-----------new register動作確認済み
-		//		if err := dbh.RegisterIds(newf); err != nil {
-		//			fmt.Println("ERR", err)
-		//		}
-
-		//------------bye dropout動作確認済み
-		//if len(byef.Ids) >= 1 {
-		//dbh.DropOutByes(byef)
-		//}
-
 	}
 
 	if req.mode == "follow" {
@@ -115,18 +102,28 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		num, _ := strconv.Atoi(req.user_id)
 		user.Ids = append(user.Ids, int64(num))
 
-		if !db.IsContain(int64(num), fromdb) {
-			if err := dbh.RegisterIds(user); err != nil {
-				fmt.Println("follow err:", err)
+		params := ""
+		url := ""
+		if req.typef == "follow" {
+
+			if !db.IsContain(int64(num), fromdb) {
+				if err := dbh.RegisterIds(user); err != nil {
+					fmt.Println("follow err:", err)
+				}
 			}
-		} else {
-			fmt.Println("KJJ")
+			params = "?screen_name=" + req.user_screen_name + "&follow=true"
+			url = "https://api.twitter.com/1.1/friendships/create.json" + params
+
+		} else if req.typef == "unfollow" {
+
+			dbh.DropOutByes(user)
+
+			params = "?screen_name=" + req.user_screen_name
+			url = "https://api.twitter.com/1.1/friendships/destroy.json" + params
+
 		}
 
-		params := "?screen_name=" + req.user_screen_name + "&follow=true"
-		url := "https://api.twitter.com/1.1/friendships/create.json" + params
-
-		resp, err := ucl.HttpClient.PostForm(url, nil)
+		_, err := ucl.HttpClient.PostForm(url, nil)
 		if err != nil {
 			fmt.Println("POST error : ", err)
 		}
@@ -167,6 +164,7 @@ func SepRequest(r *http.Request) reqbody {
 		fmt.Println("ParseError:", err)
 	}
 	res.mode = r.Form.Get("mode")
+	res.typef = r.Form.Get("typef")
 	res.user_id = r.Form.Get("user_id")
 	res.user_screen_name = r.Form.Get("screen_name")
 
