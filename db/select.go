@@ -2,8 +2,8 @@ package db
 
 import "fmt"
 
-func (d *DBHandler) Select(tablename string) (int, []follower) {
-	resp := []follower{}
+func (d *DBHandler) Select(tablename string) (int, []Follower) {
+	resp := []Follower{}
 
 	sess := SetSession()
 	count, err := sess.Select("personal_id,deleted").From(tablename).Where("deleted=?", 0).Load(&resp)

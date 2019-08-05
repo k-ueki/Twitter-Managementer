@@ -10,7 +10,7 @@ import (
 type DBHandler struct {
 	DB *sql.DB
 }
-type follower struct {
+type Follower struct {
 	PersonalID int64 `db:personal_id,json:personal_id`
 	Deleted    int   `db:deleted,json:deleted`
 }
@@ -21,7 +21,7 @@ func (d *DBHandler) RegisterIds(ids users.FollowersIds) error {
 	}
 	return nil
 }
-func FindNewByeIds(ids *users.FollowersIds, followers []follower) (newfollowers, byefollowers users.FollowersIds) {
+func FindNewByeIds(ids *users.FollowersIds, followers []Follower) (newfollowers, byefollowers users.FollowersIds) {
 
 NewFollowers:
 	//Idsの番号がdbにあるかチェック
@@ -54,7 +54,7 @@ ByeFollowers:
 
 	return newfollowers, byefollowers
 }
-func IsContain(new_user_id int64, fromdb []follower) bool {
+func IsContain(new_user_id int64, fromdb []Follower) bool {
 	for _, v := range fromdb {
 		if v.PersonalID == new_user_id {
 			return true
