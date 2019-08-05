@@ -21,6 +21,7 @@ func (d *DBHandler) RegisterIds(ids users.FollowersIds) error {
 	}
 	return nil
 }
+
 func FindNewByeIds(ids *users.FollowersIds, followers []Follower) (newfollowers, byefollowers users.FollowersIds) {
 
 NewFollowers:
@@ -54,6 +55,7 @@ ByeFollowers:
 
 	return newfollowers, byefollowers
 }
+
 func IsContain(new_user_id int64, fromdb []Follower) bool {
 	for _, v := range fromdb {
 		if v.PersonalID == new_user_id {
