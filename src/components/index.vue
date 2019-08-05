@@ -1,10 +1,12 @@
 <template>
 	<div>
 		<h1>Main</h1>
+		<!--
 		<button @click="getTweets">getTweets</button>
 		<div v-for="tweet in tweets">
 			{{tweet.text}}	
 		</div>
+		-->
 	</div>
 </template>
 <script>
@@ -20,15 +22,15 @@ export default{
 		}
 	},
 	methods:{
-//		getTweets(){
-//			axios.get(base)
-//				.then(response => {
-//					this.tweets = response.data
-//					console.log(response.data)
-//				}).catch(error => {
-//					console.log(error)
-//				})
-//		}
+///		getTweets(){
+///			axios.get(base)
+///				.then(response => {
+///					this.tweets = response.data
+///					console.log(response.data)
+///				}).catch(error => {
+///					console.log(error)
+///				})
+///		}
 	}
 }
 
