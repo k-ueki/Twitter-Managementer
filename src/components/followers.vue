@@ -13,11 +13,16 @@
 					<!--
 					{{newfollower}}
 					-->
-					<img :src="newfollower.profile_image_url">	
-					<a v-bind:href="'https://twitter.com/' + newfollower.screen_name">{{ newfollower.name }}</a><br/>
-					<br/>
-					<button class="follow" @click="follow(newfollower.id_str,newfollower.screen_name)">Follow</button>
-					<button class="hidden" @click="hidden">Hidden</button>
+					<div> 
+						<img class="img" :src="newfollower.profile_image_url">	
+					</div> 
+					<div> 
+						<a v-bind:href="'https://twitter.com/' + newfollower.screen_name">{{ newfollower.name }}</a>
+					</div> 
+					<div> 
+						<button class="follow" @click="follow(newfollower.id_str,newfollower.screen_name)">Follow</button>
+						<button class="hidden" @click="hidden">Hidden</button>
+					</div> 
 				</div>
 			</div>
 			<div class="byes">
@@ -26,11 +31,16 @@
 					<!--
 					{{byefollower}}
 					-->
-					<img :src="byefollower.profile_image_url">	
-					<a v-bind:href="'https://twitter.com/' + byefollower.screen_name">{{ byefollower.name }}</a><br/>
-					<br/>
-					<button class="unfollow" @click="unfollow(byefollower.id_str,byefollower.screen_name)">Unfollow</button>
-					<button class="hidden" @click="hidden">Hidden</button>
+					<div >
+						<img class="img" :src="byefollower.profile_image_url">	
+					</div>
+					<div> 
+						<a v-bind:href="'https://twitter.com/' + byefollower.screen_name">{{ byefollower.name }}</a>
+					</div>
+					<div> 
+						<button class="unfollow" @click="unfollow(byefollower.id_str,byefollower.screen_name)">Unfollow</button>
+						<button class="hidden" @click="hidden">Hidden</button>
+					</div> 
 				</div>
 			</div>
 		</div>
@@ -139,5 +149,8 @@ export default{
 	width:40%;
 	margin-right:10%;
 	float:right;
+}
+.img{
+	border-radius:50%;
 }
 </style>

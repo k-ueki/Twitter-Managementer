@@ -46,26 +46,12 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
-
 	_, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
-	//bodyF, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
 
 	if req.mode == "init" {
-
-		err := dbh.TruncateTable("followers")
-		if err != nil {
-			fmt.Println("truncate err:", err)
-			fmt.Fprintf(w, "Truncate Error", err)
-			return
+		if err := InitFollowersList(dbh, Ids); err != nil {
+			fmt.Fprint(w, err)
 		}
-
-		if err := dbh.RegisterIds(Ids); err != nil {
-			fmt.Println("ERR", err)
-			return
-		}
-		fmt.Println("Complete Init your followers")
-		fmt.Fprintf(w, "Complete Init your followers")
-		return
 	}
 
 	if req.mode == "status" {
@@ -73,7 +59,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 		//dbの情報とIdsを比較
 		newf, byef := db.FindNewByeIds(&Ids, fromdb)
-		//fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
 		var resp = make([]users.ResponseStruct, 2)
 
@@ -129,6 +114,20 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+}
+
+func InitFollowersList(dbh *db.DBHandler, Ids users.FollowersIds) error {
+	err := dbh.TruncateTable("followers")
+	if err != nil {
+		fmt.Println("truncate err:", err)
+		return err
+	}
+
+	if err := dbh.RegisterIds(Ids); err != nil {
+		fmt.Println("ERR", err)
+		return err
+	}
+	return nil
 }
 
 // ---------------------------
