@@ -38,7 +38,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	if r.ContentLength != 0 {
 		req = SepRequest(r)
 	}
-	fmt.Println(req)
 
 	var dbh = &db.DBHandler{
 		DB: config.SetDB(),
@@ -47,73 +46,21 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 	pathToGetFollowers := baseURL + "followers/list.json"
 	pathToGetIds := baseURL + "followers/ids.json"
 	_, Ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+	_, fromdb := dbh.Select("followers")
 
-	if req.mode == "init" {
+	switch req.mode {
+	case "init":
 		if err := InitFollowersList(dbh, Ids); err != nil {
 			fmt.Fprint(w, err)
 		}
-	}
-
-	if req.mode == "status" {
-		_, fromdb := dbh.Select("followers")
-
-		//dbの情報とIdsを比較
-		newf, byef := db.FindNewByeIds(&Ids, fromdb)
-
-		var resp = make([]users.ResponseStruct, 2)
-
-		if len(byef.Ids) != 0 {
-			resp[1].Mode = "bye"
-			users, _ := ucl.ConvertIdsToUsers(byef.Ids)
-
-			resp[1].Users = users
-		}
-
-		if len(newf.Ids) != 0 {
-			resp[0].Mode = "new"
-			users, _ := ucl.ConvertIdsToUsers(newf.Ids)
-			resp[0].Users = users
-		}
-
-		bytes, _ := json.Marshal(&resp)
+	case "status":
+		bytes := GetFollowersStatus(ucl, dbh, Ids, fromdb)
 		fmt.Fprintf(w, string(bytes))
-	}
-
-	if req.mode == "follow" {
-		_, fromdb := dbh.Select("followers")
-
-		user := users.FollowersIds{}
-
-		num, _ := strconv.Atoi(req.user_id)
-		user.Ids = append(user.Ids, int64(num))
-
-		params := ""
-		url := ""
-		if req.typef == "follow" {
-
-			if !db.IsContain(int64(num), fromdb) {
-				if err := dbh.RegisterIds(user); err != nil {
-					fmt.Println("follow err:", err)
-				}
-			}
-			params = "?screen_name=" + req.user_screen_name + "&follow=true"
-			url = "https://api.twitter.com/1.1/friendships/create.json" + params
-
-		} else if req.typef == "unfollow" {
-
-			dbh.DropOutByes(user)
-
-			params = "?screen_name=" + req.user_screen_name
-			url = "https://api.twitter.com/1.1/friendships/destroy.json" + params
-
-		}
-
-		_, err := ucl.HttpClient.PostForm(url, nil)
-		if err != nil {
-			fmt.Println("POST error : ", err)
+	case "follow":
+		if err := FollowOrUnfollow(req, ucl, dbh, fromdb); err != nil {
+			fmt.Fprint(w, err)
 		}
 	}
-
 }
 
 func InitFollowersList(dbh *db.DBHandler, Ids users.FollowersIds) error {
@@ -125,6 +72,63 @@ func InitFollowersList(dbh *db.DBHandler, Ids users.FollowersIds) error {
 
 	if err := dbh.RegisterIds(Ids); err != nil {
 		fmt.Println("ERR", err)
+		return err
+	}
+	return nil
+}
+func GetFollowersStatus(ucl *users.Client, dbh *db.DBHandler, Ids users.FollowersIds, fromdb []db.Follower) []byte {
+	//dbの情報とIdsを比較
+	newf, byef := db.FindNewByeIds(&Ids, fromdb)
+
+	var resp = make([]users.ResponseStruct, 2)
+
+	if len(newf.Ids) != 0 {
+		resp[0].Mode = "new"
+		users, _ := ucl.ConvertIdsToUsers(newf.Ids)
+		resp[0].Users = users
+	}
+
+	if len(byef.Ids) != 0 {
+		resp[1].Mode = "bye"
+		users, _ := ucl.ConvertIdsToUsers(byef.Ids)
+		resp[1].Users = users
+	}
+
+	bytes, _ := json.Marshal(&resp)
+
+	return bytes
+}
+func FollowOrUnfollow(req reqbody, ucl *users.Client, dbh *db.DBHandler, fromdb []db.Follower) error {
+	user := users.FollowersIds{}
+
+	num, _ := strconv.Atoi(req.user_id)
+	user.Ids = append(user.Ids, int64(num))
+
+	params := ""
+	url := ""
+
+	if req.typef == "follow" {
+
+		if !db.IsContain(int64(num), fromdb) {
+			if err := dbh.RegisterIds(user); err != nil {
+				fmt.Println("follow err:", err)
+			}
+		}
+		params = "?screen_name=" + req.user_screen_name + "&follow=true"
+		url = "https://api.twitter.com/1.1/friendships/create.json" + params
+
+	} else if req.typef == "unfollow" {
+
+		dbh.DropOutByes(user)
+
+		params = "?screen_name=" + req.user_screen_name
+		url = "https://api.twitter.com/1.1/friendships/destroy.json" + params
+
+	}
+
+	_, err := ucl.HttpClient.PostForm(url, nil)
+	if err != nil {
+		fmt.Println("POST error : ", err)
 		return err
 	}
 	return nil

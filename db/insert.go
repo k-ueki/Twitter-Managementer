@@ -3,9 +3,9 @@ package db
 import "fmt"
 
 func (d *DBHandler) BulkInsert(ids []int64) error {
-	flwers := []follower{}
+	flwers := []Follower{}
 	for _, v := range ids {
-		flwers = append(flwers, follower{PersonalID: v})
+		flwers = append(flwers, Follower{PersonalID: v})
 	}
 
 	sess := SetSession()
