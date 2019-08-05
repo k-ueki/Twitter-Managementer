@@ -6,7 +6,7 @@
 		<button @click="getFollowers">GetFollowers'List</button>
 		<button @click="">Hiddened List</button>
 
-		<div class="dispAreaWrapper">
+		<div class="dispAreaWrapper" v-show="dispflag">
 			<div class="news">
 				<h3 style="color:#00FF00;">New!</h3>
 				<div v-for="newfollower in newfollowers">
@@ -25,7 +25,7 @@
 					</div> 
 				</div>
 			</div>
-			<div class="byes">
+			<div class="byes"> 
 				<h3 style="color:red;">Bye!</h3>
 				<div v-for="byefollower in byefollowers">
 					<!--
@@ -44,6 +44,9 @@
 				</div>
 			</div>
 		</div>
+		<div v-show="!dispflag">
+			<h4>Nobody follow you new!<br/>Nobody that you follow unfollow you new!</h4>
+		</div>
 	</div>
 </template>
 <script>
@@ -57,6 +60,7 @@ export default{
 		return {
 			newfollowers:[],
 			byefollowers:[],
+			dispflag:false,
 		}
 	},
 	methods:{
@@ -81,6 +85,12 @@ export default{
 				.then(response => {
 					this.newfollowers = response.data[0].users
 					this.byefollowers = response.data[1].users
+					if(response.data[0].users!=null || response.data[1].users!=null){
+						this.dispflag = true
+					}
+					if(response.data[0].users==null&&response.data[1].users==null){
+						this.dispflag = false
+					}
 					console.log(response.data)
 					console.log(response)
 				}).catch(error => {

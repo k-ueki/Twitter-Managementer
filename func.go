@@ -76,6 +76,7 @@ func InitFollowersList(dbh *db.DBHandler, Ids users.FollowersIds) error {
 	}
 	return nil
 }
+
 func GetFollowersStatus(ucl *users.Client, dbh *db.DBHandler, Ids users.FollowersIds, fromdb []db.Follower) []byte {
 	//dbの情報とIdsを比較
 	newf, byef := db.FindNewByeIds(&Ids, fromdb)
@@ -98,6 +99,7 @@ func GetFollowersStatus(ucl *users.Client, dbh *db.DBHandler, Ids users.Follower
 
 	return bytes
 }
+
 func FollowOrUnfollow(req reqbody, ucl *users.Client, dbh *db.DBHandler, fromdb []db.Follower) error {
 	user := users.FollowersIds{}
 
@@ -173,6 +175,7 @@ func SepRequest(r *http.Request) reqbody {
 
 	return res
 }
+
 func Separate(str string) string {
 	tmp := strings.Split(str, "=")
 	return tmp[1]
