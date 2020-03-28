@@ -31,6 +31,10 @@ func NewUsersClient() *users.Client {
 	}
 }
 
+func Test(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "hogehog!")
+}
+
 func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewUsersClient()
 	req := reqbody{}
