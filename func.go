@@ -23,6 +23,30 @@ func NewUsersClient() *users.Client {
 	}
 }
 
+func InitFollowers(w http.ResponseWriter,r *http.Request){
+	var ucl = NewUsersClient()
+	var dbh = &db.DBHandler{
+		DB: config.SetDB(),
+	}
+	pathToGetFollowers := baseURL + "followers/list.json"
+	pathToGetIds := baseURL + "followers/ids.json"
+	_, ids := ucl.GetFollowersList(pathToGetFollowers, pathToGetIds)
+
+	stmt,err:=dbh.DB.Prepare("TRUNCATE followers")
+	if err!=nil{
+		fmt.Println(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec()
+
+	if err:=dbh.BulkInsert(ids.Ids);err!=nil{
+		fmt.Println("err",err)
+	}
+	fmt.Println(ids)
+
+	return
+}
+
 func Followers(w http.ResponseWriter, r *http.Request) {
 	var ucl = NewUsersClient()
 

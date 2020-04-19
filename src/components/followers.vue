@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1>Followers</h1>
-<!--		<button @click="initFollowers">Init Followers</button>-->
+		<button @click="initFollowers">Init Followers</button>
 		<button @click="followedStatus">FollowedStatus</button>
 		<button @click="getFollowers">GetFollowers'List</button>
 
@@ -65,6 +65,16 @@ export default{
 				// 	.catch(err=>{
 				// 	// console.log(err)
 				// })
+		},
+		initFollowers(){
+			if (confirm("init for sure?")){
+				axios.put(base+"/init")
+					.then(resp=>{
+						alert("success for initialize")
+					}).catch(err=>{
+						alert("failed to initialize")
+					})
+            }
 		}
 	}
 }

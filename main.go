@@ -23,6 +23,7 @@ func main() {
 
 	//r.HandleFunc("/", APISet)
 	r.HandleFunc("/followers/", Followers)
+	r.HandleFunc("/followers/init", InitFollowers)
 	r.HandleFunc("/timeline/", Timeline)
 
 	err := RunServe(port, r, cors)
