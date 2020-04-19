@@ -47,7 +47,6 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 		newf, byef := db.FindNewBye(&Ids, fromdb)
 		fmt.Println("NEW", newf, "\nBYE", byef) //Ids
 
-		//var resp map[string][]string
 		type responseStruct struct {
 			Mode  string       `json:mode`
 			Users []users.User `json:users`
@@ -69,31 +68,9 @@ func Followers(w http.ResponseWriter, r *http.Request) {
 
 		bytes, _ := json.Marshal(&resp)
 		fmt.Fprintf(w, string(bytes))
-		//fmt.Println(resp)
-		//binary := []byte(resp)
-		//fmt.Fprintf(w, string(binary))
+
 		return
-		//init register
-		//if err := dbh.RegisterIds(Ids); err != nil {
-		//	fmt.Println("ERR", err)
-		//}
-		//fmt.Println("OK")
-
-		//-----------new register動作確認済み
-		//		if err := dbh.RegisterIds(newf); err != nil {
-		//			fmt.Println("ERR", err)
-		//		}
-
-		//------------bye dropout動作確認済み
-		//if len(byef.Ids) >= 1 {
-		//dbh.DropOutByes(byef)
-		//}
-
 	}
-
-	//fmt.Println(dbh, Ids)
-	//fmt.Println(string(bodyF))
-	//	fmt.Fprintf(w, string(bodyF))
 }
 
 // ---------------------------
@@ -127,6 +104,7 @@ func GetMode(r *http.Request) string {
 	r.Body.Read(body)
 	return Separate(string(body))
 }
+
 func Separate(str string) string {
 	tmp := strings.Split(str, "=")
 	return tmp[1]

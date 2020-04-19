@@ -20,10 +20,8 @@ func (u *Client) ConvertIdsToUsers(ids []int64) []User {
 		if i == 0 {
 			nums += strconv.FormatInt(v, 10)
 		}
-		fmt.Println(i)
 	}
 	url += nums
-	fmt.Println(url)
 
 	resp, _ := u.HttpClient.Get(url)
 	defer resp.Body.Close()
@@ -31,7 +29,7 @@ func (u *Client) ConvertIdsToUsers(ids []int64) []User {
 	body, _ := ioutil.ReadAll(resp.Body)
 	_ = json.Unmarshal(body, &users)
 
-	fmt.Println(users)
+	fmt.Println("users",users)
 
 	return users
 }
